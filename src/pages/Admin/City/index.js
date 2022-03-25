@@ -46,7 +46,6 @@ function City() {
 								{/* <img className="pointer" src={LOGO_IMG} alt="Addons" /> */}
 								<div className="media-body">
 									<h5 className="mt-0">{city.name}</h5>
-									{/* <p className="mt-0">{cat.name_ar}</p> */}
 								</div>
 							</div>
 							<div className="dropdown">
