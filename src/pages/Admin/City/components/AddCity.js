@@ -44,7 +44,7 @@ function AddCity({ selectedCity, setCities, cities }) {
 							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 								<span className="icon-close"></span>
 							</button>
-							<h4 className="text-center">{selectedCity?.name ? "Update" : "Add"} Speciality</h4>
+							<h4 className="text-center">{selectedCity?.name ? "Update" : "Add"} City</h4>
 							<Form>
 								<div className="row">
 									<div className="col-md-12">
