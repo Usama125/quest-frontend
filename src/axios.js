@@ -8,7 +8,7 @@ const instance = axios.create({
 })
 
 // https://quest-backend.herokuapp.com/api
-// http://localhost:8081/api
+// http://localhost:8080/api
 
 if (token) {
   instance.defaults.headers.common['authorization'] = "Bearer" + " " + token
