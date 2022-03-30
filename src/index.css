@@ -99,3 +99,56 @@
 .media {
   border-bottom: 0px solid white !important;
 }
+
+.demo-wrapper {
+  border: 1px solid lightgrey
+}
+
+.demo-editor {
+  min-height: 180px;
+  padding: 1rem;
+}
+
+.select-input-css {
+  height: 3.1rem !important;
+}
+
+.table-section {
+  padding: 60px 0;
+}
+
+.table-section .card {
+  border: 0;
+}
+
+.table-section .page-item {
+  padding: 0 5px;
+}
+
+.table-section .page-link {
+  border: 0;
+}
+
+.table-section .page-item.active .page-link {
+  border-radius: 50%;
+  background: #417EBF;
+}
+
+.table-section table tr th {
+  color: #417EBF;
+}
+
+.table-section h4 {
+  font-weight: 600;
+  color: #417EBF;
+}
+
+.table-section .form-control {
+  border-radius: 30px;
+  padding-left: 40px;
+}
+
+.table-section .icon-search {
+  position: absolute;
+  left: 15px;
+}

@@ -1,14 +1,14 @@
 export const getRoutes = (role) => {
     let routes = [
         {
-            name: "Quests",
+            name: "Game Types",
             icon: "icon-hospital",
-            route: "/admin/quests"
+            route: "/admin/game-types"
         },
         {
-            name: "Cities",
+            name: "Towns",
             icon: "icon-qr-code",
-            route: "/admin/cities"
+            route: "/admin/towns"
         },
         {
             name: "Games",

@@ -16,7 +16,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (user && user.role) {
-      history.push("/admin/quests");
+      history.push("/admin/game-types");
     }
   }, []);
 
@@ -43,7 +43,7 @@ const LoginForm = () => {
         localStorage.setItem("auth", res?.data?.data?.token);
         localStorage.setItem("user", JSON.stringify(res?.data?.data?.user));
         localStorage.setItem("familyMembers", JSON.stringify(res?.data?.data?.familyMembers));
-        history.push("/admin/quests");
+        history.push("/admin/game-types");
       }).catch(err => {
         toast.error(err.response.data.message || "Invalid Credentials")
       })

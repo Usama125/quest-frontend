@@ -1,0 +1,4 @@
+export const DURATION_TYPE = {
+	HOURS: "HOURS",
+	MINUTES: "MINUTES"
+}

@@ -3,48 +3,43 @@ import { Formik, Form } from 'formik'
 import TextInput from '../../../../components/forms/TextInput'
 import TextArea from '../../../../components/forms/TextArea'
 import { toast } from 'react-toastify'
-import CitiesApi from '../../../../api/cities'
+import { useEffect, useState } from 'react'
+import GameTypeApi from '../../../../api/gameType'
 
-function AddCity({ selectedCity, setCities, cities }) {
+function AddGameType({ selectedGameType, setGameTypes, gameTypes }) {
 	return (
 		<Formik
 			initialValues={{
-				name: selectedCity?.name || ""
+				name: selectedGameType?.name || "",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required('Required')
 			})}
 			onSubmit={(values, { resetForm }) => {
-				if (selectedCity) {
-					CitiesApi.updateCities(selectedCity._id, values).then(res => {
-						const tempCities = JSON.parse(JSON.stringify(cities));
-						tempCities.forEach(item => {
-							if (item._id === selectedCity._id) {
-								item.name = values.name
-							}
-						});
-						setCities(tempCities);
-						toast.success("City has been updated");
+				if (selectedGameType) {
+					GameTypeApi.updateGameType(selectedGameType._id, values).then(res => {
+						setGameTypes(res.data.data);
+						resetForm();
+						toast.success("Game Type has been updated");
 					});
 				} else {
-					CitiesApi.createCity(values).then(res => {
-						const tempCities = JSON.parse(JSON.stringify(cities));
-						tempCities.push({ name: values.name, _id: res.data.data._id });
-						setCities(tempCities);
-						toast.success("City has been added");
+					GameTypeApi.createGameType(values).then(res => {
+						setGameTypes(res.data.data);
+						resetForm();
+						toast.success("Game Type has been added");
 					})
 				}
 			}}
 			enableReinitialize={true}
 		>
-			<div className="modal fade" id="addCity" tabindex="-1" aria-labelledby="addCityLabel" aria-hidden="true">
+			<div className="modal fade" id="addGameType" tabindex="-1" aria-labelledby="addGameTypeLabel" aria-hidden="true">
 				<div className="modal-dialog modal-dialog-centered modal-lg">
 					<div className="modal-content">
 						<div className="modal-body">
 							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
 								<span className="icon-close"></span>
 							</button>
-							<h4 className="text-center">{selectedCity?.name ? "Update" : "Add"} City</h4>
+							<h4 className="text-center">{selectedGameType?.name ? "Update" : "Add"} Game Type</h4>
 							<Form>
 								<div className="row">
 									<div className="col-md-12">
@@ -54,7 +49,7 @@ function AddCity({ selectedCity, setCities, cities }) {
 									</div>
 								</div>
 								<div className="form-group text-center mb-0 mt-3">
-									<button type="submit" className="btn btn-primary">{selectedCity?.name ? "Update" : "Save"}</button>
+									<button type="submit" className="btn btn-primary">{selectedGameType?.name ? "Update" : "Save"}</button>
 								</div>
 							</Form>
 						</div>
@@ -65,4 +60,4 @@ function AddCity({ selectedCity, setCities, cities }) {
 	)
 }
 
-export default AddCity
+export default AddGameType
