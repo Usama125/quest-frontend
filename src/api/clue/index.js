@@ -5,8 +5,8 @@ const ClueApi = {
 	createClue(data) {
 		return trackPromise(axios.post(`/clues`, data))
 	},
-	getClues() {
-		return trackPromise(axios.get(`/clues`))
+	getGameClues(gameId) {
+		return trackPromise(axios.get(`/clues/${gameId}`))
 	},
 	updateClue(id, data) {
 		return trackPromise(axios.put(`/clues/${id}`, data))

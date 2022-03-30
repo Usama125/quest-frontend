@@ -15,11 +15,11 @@ export const getRoutes = (role) => {
             icon: "icon-qr-code",
             route: "/admin/games"
         },
-        {
-            name: "Clues",
-            icon: "icon-qr-code",
-            route: "/admin/clues"
-        }
+        // {
+        //     name: "Clues",
+        //     icon: "icon-qr-code",
+        //     route: "/admin/clues"
+        // }
     ];
 
     return routes;

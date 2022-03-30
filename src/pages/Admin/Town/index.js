@@ -28,41 +28,48 @@ function Town() {
 
 	return (
 		<DashboardLayout>
-			<div className="row align-items-center add-list">
-				<div className="col-6">
-					<h4>Towns</h4>
-				</div>
-				<div className="col-6 text-right">
-					<a href={""} onClick={() => setSelectedTown(null)} data-toggle="modal" data-target="#addTown" className="btn btn-primary px-3">+ ADD TOWN</a>
-				</div>
-			</div>
-			<div className="row list-block">
-				{towns?.map((town, key) => (
-					<div key={key} className="col-sm-6 col-md-4 col-lg-4 col-xl-3">
-						<div className="card">
-							<div className="card-body">
-
-								{/* <img className="pointer" src={LOGO_IMG} alt="Addons" /> */}
-								<div className="media-body">
-									<h5 className="mt-0">{town.name}</h5>
-								</div>
-							</div>
-							<div className="dropdown">
-								<a href={""} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span className="icon-dots"></span>
-								</a>
-								<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a className="dropdown-item delete-item" href={""} onClick={(e) => { e.preventDefault(); deleteTownHandler(town) }}>Delete</a>
-									<a className="dropdown-item delete-item" style={{ backgroundColor: "#417EBF" }} href={""} onClick={(e) => { e.preventDefault(); setSelectedTown(town) }} data-toggle="modal" data-target="#addTown">Update</a>
+			<section class="table-section">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="row align-items-center mb-4">
+										<div class="col-md-6">
+											<h4>Towns</h4>
+										</div>
+										<div class="col-md-6 text-right">
+											<a href={""} onClick={() => setSelectedTown(null)} data-toggle="modal" data-target="#addTown" className="btn btn-primary px-3">+ ADD TOWN</a>
+										</div>
+									</div>
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th style={{ fontSize: '1rem' }}>#</th>
+												<th style={{ fontSize: '1rem' }}>Name</th>
+												<th style={{ fontSize: '1rem' }} >Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{towns?.map((town, index) => (
+												<tr>
+													<td style={{ fontSize: '0.9rem' }}>{index + 1}</td>
+													<td style={{ fontSize: '0.9rem' }}>{town.name}</td>
+													<td class="text-center">
+														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedTown(town) }} data-toggle="modal" data-target="#addTown"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>
+														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteTownHandler(town) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-				))}
-				{towns.length === 0 && (
-					<p>No towns added yet</p>
-				)}
-			</div>
+
+				</div>
+			</section>
 			<AddTown selectedTown={selectedTown} setTowns={setTowns} towns={towns} />
 		</DashboardLayout>
 	)

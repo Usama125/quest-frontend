@@ -28,42 +28,48 @@ function GameTypes() {
 	}
 	return (
 		<DashboardLayout>
-			<div className="row align-items-center add-list">
-				<div className="col-6">
-					<h4>Game Types</h4>
-				</div>
-				<div className="col-6 text-right">
-					<a href={""} data-toggle="modal" onClick={() => setSelectedGameType(null)} data-target="#addGameType" className="btn btn-primary px-3">+ ADD GAME TYPE</a>
-				</div>
-			</div>
-			<div className="row list-block">
-				{gameTypes?.map((gameType, key) => (
-					<div key={key} className="col-sm-6 col-md-4 col-lg-4 col-xl-3">
-						<div className="card">
-							<div className="card-body">
-								<div className="media">
-									<img className="pointer" src={LOGO_IMG} alt="Game Type" />
-									<div className="media-body">
-										<h5 className="mt-0">{gameType.name}</h5>
+			<section class="table-section">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="row align-items-center mb-4">
+										<div class="col-md-6">
+											<h4>Game Types</h4>
+										</div>
+										<div class="col-md-6 text-right">
+											<a href={""} data-toggle="modal" onClick={() => setSelectedGameType(null)} data-target="#addGameType" className="btn btn-primary px-3">+ ADD GAME TYPE</a>
+										</div>
 									</div>
-								</div>
-							</div>
-							<div className="dropdown">
-								<a href={""} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span className="icon-dots"></span>
-								</a>
-								<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a className="dropdown-item delete-item" href={""} onClick={(e) => { e.preventDefault(); deleteGameTypeHandler(gameType) }}>Delete</a>
-									<a className="dropdown-item delete-item" style={{ backgroundColor: "#417EBF" }} href={""} onClick={(e) => { e.preventDefault(); setSelectedGameType(gameType) }} data-toggle="modal" data-target="#addGameType">Update</a>
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th style={{ fontSize: '1rem' }}>#</th>
+												<th style={{ fontSize: '1rem' }}>Name</th>
+												<th style={{ fontSize: '1rem' }}>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{gameTypes?.map((gameType, index) => (
+												<tr>
+													<td style={{ fontSize: '0.9rem' }}>{index + 1}</td>
+													<td style={{ fontSize: '0.9rem' }}>{gameType.name}</td>
+													<td style={{ fontSize: '0.9rem' }} class="text-center">
+														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedGameType(gameType) }} data-toggle="modal" data-target="#addGameType"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>
+														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteGameTypeHandler(gameType) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-				))}
-				{gameTypes.length === 0 && (
-					<p>No Game types added yet</p>
-				)}
-			</div>
+
+				</div>
+			</section>
 			<AddGameType selectedGameType={selectedGameType} setGameTypes={setGameTypes} gameTypes={gameTypes} />
 		</DashboardLayout>
 	)

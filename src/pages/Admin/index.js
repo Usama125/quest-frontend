@@ -3,7 +3,6 @@ import AdminRoute from "../../ProtectedRoutes/AdminRoute";
 import Games from './Games';
 import GameTypes from './GameTypes';
 import Town from './Town'
-import Clues from './Clues';
 import GameInfo from './Games/components/GameInfo';
 
 const AdminRouter = withRouter(({ match, ...props }) => {
@@ -21,9 +20,9 @@ const AdminRouter = withRouter(({ match, ...props }) => {
             <AdminRoute exact path={`${match.path}/game/:id`} >
                 <GameInfo />
             </AdminRoute>
-            <AdminRoute exact path={`${match.path}/clues`} >
+            {/* <AdminRoute exact path={`${match.path}/clues`} >
                 <Clues />
-            </AdminRoute>
+            </AdminRoute> */}
         </Switch>
     )
 });

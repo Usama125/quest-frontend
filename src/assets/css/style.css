@@ -1935,7 +1935,7 @@ header .dropdown-menu {
 	}
 
 	.table-section {
-		padding: 60px 0;
+		padding: 0 0;
 	}
 
 	.table-section .card {
@@ -1973,3 +1973,11 @@ header .dropdown-menu {
 		position: absolute;
 		left: 15px;
 	}
+
+	.table-section .table-bordered td, .table-section .table-bordered th {
+    border: 1px solid #dee2e6 !important;
+}
+
+.table-section .table td, .table-section .table th {
+    padding: 1.1rem 0.6rem !important;
+  }

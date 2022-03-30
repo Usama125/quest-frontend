@@ -54,24 +54,24 @@ function Games() {
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th>#</th>
-												<th>Name</th>
-												<th>Type</th>
-												<th>Towns</th>
-												<th width="140">Actions</th>
+												<th style={{ fontSize: '1rem' }}>#</th>
+												<th style={{ fontSize: '1rem' }}>Name</th>
+												<th style={{ fontSize: '1rem' }}>Type</th>
+												<th style={{ fontSize: '1rem' }}>Towns</th>
+												<th style={{ fontSize: '1rem' }}>Actions</th>
 											</tr>
 										</thead>
 										<tbody>
 											{games?.map((game, index) => (
 												<tr>
-													<td>{index + 1}</td>
-													<td>{game.name}</td>
-													<td>{game?.gameTypeId?.name}</td>
-													<td>{game.towns?.map(item => item['name'] + ", ")}</td>
+													<td style={{ fontSize: '0.9rem' }}>{index + 0.9}</td>
+													<td style={{ fontSize: '0.9rem' }}>{game.name}</td>
+													<td style={{ fontSize: '0.9rem' }}>{game?.gameTypeId?.name}</td>
+													<td style={{ fontSize: '0.9rem' }}>{game.towns?.map(item => item['name'] + ", ")}</td>
 													<td class="text-center">
-														<Link to={`game/${game._id}`} class="text-info mx-2"><i class="fa fa-eye"></i></Link>
-														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedGame(game) }} data-toggle="modal" data-target="#addGame"><i class="fa fa-pencil"></i></a>
-														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteGameHandler(game) }}><i class="fa fa-trash"></i></a>
+														<Link to={`game/${game._id}`} class="text-info mx-2"><i style={{ fontSize: '1.4rem' }} class="fa fa-eye"></i></Link>
+														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedGame(game) }} data-toggle="modal" data-target="#addGame"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>
+														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteGameHandler(game) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>
 													</td>
 												</tr>
 											))}
