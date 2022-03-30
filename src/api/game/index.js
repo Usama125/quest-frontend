@@ -8,6 +8,9 @@ const GameApi = {
 	getGames() {
 		return trackPromise(axios.get(`/games`))
 	},
+	getSingleGame(id) {
+		return trackPromise(axios.get(`/games/${id}`))
+	},
 	updateGame(id, data) {
 		return trackPromise(axios.put(`/games/${id}`, data))
 	},
