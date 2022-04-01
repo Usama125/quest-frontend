@@ -4,8 +4,10 @@ import TextInput from '../../../../components/forms/TextInput'
 import TextArea from '../../../../components/forms/TextArea'
 import { toast } from 'react-toastify'
 import TownsApi from '../../../../api/towns'
+import { useRef } from 'react'
 
 function AddTown({ selectedTown, setTowns, towns }) {
+	const closeBtnRef = useRef();
 	return (
 		<Formik
 			initialValues={{
@@ -25,6 +27,8 @@ function AddTown({ selectedTown, setTowns, towns }) {
 						});
 						setTowns(tempTowns);
 						toast.success("Town has been updated");
+						resetForm();
+						closeBtnRef.current.click();
 					});
 				} else {
 					TownsApi.createTown(values).then(res => {
@@ -32,6 +36,8 @@ function AddTown({ selectedTown, setTowns, towns }) {
 						tempTowns.push({ name: values.name, _id: res.data.data._id });
 						setTowns(tempTowns);
 						toast.success("Town has been added");
+						resetForm();
+						closeBtnRef.current.click();
 					})
 				}
 			}}
@@ -41,7 +47,7 @@ function AddTown({ selectedTown, setTowns, towns }) {
 				<div className="modal-dialog modal-dialog-centered modal-lg">
 					<div className="modal-content">
 						<div className="modal-body">
-							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+							<button ref={closeBtnRef} type="button" className="close" data-dismiss="modal" aria-label="Close">
 								<span className="icon-close"></span>
 							</button>
 							<h4 className="text-center">{selectedTown?.name ? "Update" : "Add"} Town</h4>

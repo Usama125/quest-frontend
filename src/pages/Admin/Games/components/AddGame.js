@@ -5,15 +5,15 @@ import SelectInput from '../../../../components/forms/SelectInput'
 import { toast } from 'react-toastify'
 import GameApi from '../../../../api/game'
 import TownsApi from '../../../../api/towns'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import MultipleSelect from '../../../../components/forms/MultipleSelect'
 import { DURATION_TYPE } from '../../../../constants'
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 
-function AddGame({ selectedGame, setGames, games, gameTypes }) {
+function AddGame({ selectedGame, setGames, games, gameTypes, clickGameLabel }) {
 
 	const [townsError, setTownsError] = useState(false)
 	const [towns, setTowns] = useState({
@@ -22,10 +22,28 @@ function AddGame({ selectedGame, setGames, games, gameTypes }) {
 	});
 	const [editorState, setEditorState] = useState(EditorState.createEmpty())
 	const [introduction, setIntroduction] = useState("");
-	const [introductionError, setIntroductionError] = useState("");
+	const [introductionError, setIntroductionError] = useState(false);
+	const closeBtnRef = useRef();
+
+	useEffect(() => {
+		if (selectedGame && Object.keys(selectedGame).length > 0) {
+			setEditorState(EditorState.createWithContent(
+				ContentState.createFromBlockArray(
+					convertFromHTML(selectedGame?.introduction)
+				)
+			))
+			setIntroduction(selectedGame?.introduction);
+		}
+	}, [selectedGame]);
 
 	const onEditorStateChange = (editorState) => {
 		setIntroduction(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+
+		if (introduction === "" || introduction === "<p></p>\n") {
+			setIntroductionError(true);
+		} else {
+			setIntroductionError(false);
+		}
 		setEditorState(editorState)
 	};
 
@@ -65,16 +83,22 @@ function AddGame({ selectedGame, setGames, games, gameTypes }) {
 				name: Yup.string().required('Required'),
 				gameTypeId: Yup.string().required('Required'),
 				durationType: Yup.string().required('Required'),
-				duration: Yup.string().required('Required'),
+				duration: Yup.number("Must be a number").required('Required'),
 			})}
 			onSubmit={(values, { resetForm }) => {
-				console.log("values => ", values);
 				if (towns.selectedTowns.length === 0) {
 					setTownsError(true)
 				} if (towns.selectedTowns.length === 0) {
 					setTownsError(true)
 				} else {
 					setTownsError(false)
+				}
+
+				if (introduction === "" || introduction === "<p></p>\n") {
+					setIntroductionError(true);
+					return false;
+				} else {
+					setIntroductionError(false);
 				}
 
 				const newValues = JSON.parse(JSON.stringify(values))
@@ -93,12 +117,18 @@ function AddGame({ selectedGame, setGames, games, gameTypes }) {
 						setGames(res.data.data);
 						resetForm();
 						toast.success("Game has been updated");
+						setIntroduction("");
+						setEditorState(EditorState.createEmpty());
+						closeBtnRef.current.click();
 					});
 				} else {
 					GameApi.createGame(newValues).then(res => {
 						setGames(res.data.data);
 						resetForm();
 						toast.success("Game has been added");
+						setIntroduction("");
+						setEditorState(EditorState.createEmpty());
+						closeBtnRef.current.click();
 					})
 				}
 			}}
@@ -108,7 +138,7 @@ function AddGame({ selectedGame, setGames, games, gameTypes }) {
 				<div className="modal-dialog modal-dialog-centered modal-lg">
 					<div className="modal-content">
 						<div className="modal-body">
-							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+							<button ref={closeBtnRef} onClick={clickGameLabel} type="button" className="close" data-dismiss="modal" aria-label="Close">
 								<span className="icon-close"></span>
 							</button>
 							<h4 className="text-center">{selectedGame?.name ? "Update" : "Add"} Game</h4>
@@ -156,13 +186,15 @@ function AddGame({ selectedGame, setGames, games, gameTypes }) {
 										</div>
 									</div>
 									<div className="col-md-12">
-										<div className="form-group">
+										<label for="intro" >Introduction</label>
+										<div id="intro" className="form-group">
 											<Editor
 												editorState={editorState}
-												wrapperClassName="demo-wrapper"
+												wrapperClassName={introductionError ? "error-demo-wrapper" : "demo-wrapper"}
 												editorClassName="demo-editor"
 												onEditorStateChange={onEditorStateChange}
 											/>
+											{introductionError && (<span style={{ color: 'red', float: "right", marginTop: "0.6rem" }}>Introduction is required</span>)}
 										</div>
 									</div>
 								</div>

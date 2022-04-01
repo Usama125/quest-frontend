@@ -39,7 +39,9 @@ function GameTypes() {
 											<h4>Game Types</h4>
 										</div>
 										<div class="col-md-6 text-right">
-											<a href={""} data-toggle="modal" onClick={() => setSelectedGameType(null)} data-target="#addGameType" className="btn btn-primary px-3">+ ADD GAME TYPE</a>
+											<button onClick={() => setSelectedGameType(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addGameType">
+												+ ADD GAME TYPE
+											</button>
 										</div>
 									</div>
 									<table class="table table-bordered">
@@ -61,6 +63,11 @@ function GameTypes() {
 													</td>
 												</tr>
 											))}
+											{gameTypes.length === 0 && (
+												<tr>
+													<td colSpan={3}>No Game Types Added Yet</td>
+												</tr>
+											)}
 										</tbody>
 									</table>
 								</div>

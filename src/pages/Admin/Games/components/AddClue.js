@@ -4,23 +4,42 @@ import TextInput from '../../../../components/forms/TextInput'
 import SelectInput from '../../../../components/forms/SelectInput'
 import { toast } from 'react-toastify'
 import ClueApi from '../../../../api/clue'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import GameApi from '../../../../api/game'
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { Editor } from "react-draft-wysiwyg";
+import { useParams } from 'react-router-dom';
 
 function AddClue({ selectedClue, setClues }) {
 	const [file, setFile] = useState(null)
 	const [fileError, setFileError] = useState("")
 	const [submited, setSubmited] = useState(false)
 	const [games, setGames] = useState([]);
-
+	const { id } = useParams()
 	const [editorState, setEditorState] = useState(EditorState.createEmpty())
 	const [clueText, setClueText] = useState("");
+	const [clueTextError, setClueTextError] = useState(false);
+	const closeBtnRef = useRef();
+
+	useEffect(() => {
+		if (selectedClue && Object.keys(selectedClue).length > 0) {
+			setEditorState(EditorState.createWithContent(
+				ContentState.createFromBlockArray(
+					convertFromHTML(selectedClue?.text)
+				)
+			))
+			setClueText(selectedClue?.text);
+		}
+	}, [selectedClue]);
 
 	const onEditorStateChange = (editorState) => {
 		setClueText(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+		if (clueText === "" || clueText === "<p></p>\n") {
+			setClueTextError(true);
+		} else {
+			setClueTextError(false);
+		}
 		setEditorState(editorState)
 	};
 
@@ -44,22 +63,20 @@ function AddClue({ selectedClue, setClues }) {
 				name: selectedClue?.name || "",
 				hint_1: selectedClue?.hint_1 || "",
 				hint_2: selectedClue?.hint_2 || "",
-				gameId: selectedClue?.gameId._id || "",
-				type: selectedClue?.type || "",
+				type: selectedClue?.type || "TEXT",
 				ans: selectedClue?.ans || "",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required('Required'),
 				hint_1: Yup.string().required('Required'),
 				hint_2: Yup.string().required('Required'),
-				gameId: Yup.string().required('Required'),
 				type: Yup.string().required('Required'),
 				ans: Yup.string().required('Required'),
 			})}
 			onSubmit={(values, { resetForm }) => {
 				setSubmited(true);
 
-				if (file === null) {
+				if (values.type !== "TEXT" && file === null) {
 					setFileError("File is required")
 					return false;
 				}
@@ -89,33 +106,44 @@ function AddClue({ selectedClue, setClues }) {
 					setFileError("");
 				}
 
-				if (file) {
-					let formData = new FormData();
-					formData.append("name", values.name);
-					formData.append("hint_1", values.hint_1);
-					formData.append("hint_2", values.hint_2);
-					formData.append("gameId", values.gameId);
-					formData.append("type", values.type);
-					formData.append("text", clueText);
-					formData.append("ans", values.ans);
-					values.type !== "TEXT" && formData.append("file", file);
-
-					if (selectedClue) {
-						ClueApi.updateClue(selectedClue._id, formData).then(res => {
-							setClues(res.data.data);
-							resetForm();
-							toast.success("Clue has been updated");
-						});
-					} else {
-						ClueApi.createClue(formData).then(res => {
-							setClues(res.data.data);
-							resetForm();
-							toast.success("Clue has been added");
-						})
-					}
+				if (clueText === "" || clueText === "<p></p>\n") {
+					setClueTextError(true);
+					return false;
 				} else {
-					setFileError("Hint File Required");
+					setClueTextError(false);
 				}
+
+
+				let formData = new FormData();
+				formData.append("name", values.name);
+				formData.append("hint_1", values.hint_1);
+				formData.append("hint_2", values.hint_2);
+				formData.append("gameId", id);
+				formData.append("type", values.type);
+				formData.append("text", clueText);
+				formData.append("ans", values.ans);
+				values.type !== "TEXT" && formData.append("file", file);
+
+				if (selectedClue) {
+					ClueApi.updateClue(selectedClue._id, formData).then(res => {
+						setClues(res.data.data);
+						resetForm();
+						toast.success("Clue has been updated");
+						setClueText("");
+						setEditorState(EditorState.createEmpty());
+						closeBtnRef.current.click();
+					});
+				} else {
+					ClueApi.createClue(formData).then(res => {
+						setClues(res.data.data);
+						resetForm();
+						toast.success("Clue has been added");
+						setClueText("");
+						setEditorState(EditorState.createEmpty());
+						closeBtnRef.current.click();
+					})
+				}
+
 			}}
 			enableReinitialize={true}
 		>
@@ -126,10 +154,10 @@ function AddClue({ selectedClue, setClues }) {
 							<div className="modal-dialog modal-dialog-centered modal-lg">
 								<div className="modal-content">
 									<div className="modal-body">
-										<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+										<button ref={closeBtnRef} type="button" className="close" data-dismiss="modal" aria-label="Close">
 											<span className="icon-close"></span>
 										</button>
-										<h4 className="text-center">{selectedClue?.hint ? "Update" : "Add"} Clue</h4>
+										<h4 className="text-center">{selectedClue?.hint_1 ? "Update" : "Add"} Clue</h4>
 										<Form>
 											<div className="row">
 												<div className="col-md-12">
@@ -165,27 +193,20 @@ function AddClue({ selectedClue, setClues }) {
 															{submited && fileError ? (
 																<span style={{ color: "red", fontSize: "0.9rem", paddingTop: "10px" }}>{fileError}</span>
 															) : null}
+															{selectedClue && Object.keys(selectedClue).length > 0 && selectedClue?.url && (<div style={{ marginTop: "1rem" }}><a href={selectedClue.url} target="_blank">See Attached File</a></div>)}
 														</div>
 													</div>
 												)}
 												<div className="col-md-12">
-													<div className="form-group">
-														<SelectInput name="gameId">
-															<option value="">Game</option>
-															{games?.map(game => (
-																<option key={game._id} value={game._id}>{game.name}</option>
-															))}
-														</SelectInput>
-													</div>
-												</div>
-												<div className="col-md-12">
+													<label for="intro" >Clue Text</label>
 													<div className="form-group">
 														<Editor
 															editorState={editorState}
-															wrapperClassName="demo-wrapper"
+															wrapperClassName={clueTextError ? "error-demo-wrapper" : "demo-wrapper"}
 															editorClassName="demo-editor"
 															onEditorStateChange={onEditorStateChange}
 														/>
+														{clueTextError && (<span style={{ color: 'red', float: "right", marginTop: "0.6rem", marginBottom: "0.6rem" }}>Clue Text is required</span>)}
 													</div>
 												</div>
 												<div className="col-md-12">

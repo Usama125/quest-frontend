@@ -39,32 +39,58 @@ function GameInfo() {
 				</div>
 			</div>
 			<div class="row doctor-profile">
-				<div class="col-md-4">
+				<div class="col-md-12">
 					<div class="card profile-detail py-3">
 						<div class="card-body">
 							<div class="media">
 								<div class="media-body">
-									<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Name</h5>
-									<p>{game?.name}</p>
-									<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Game Type</h5>
-									<p>{game?.gameTypeId?.name}</p>
-									<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Available In</h5>
-									<p>{game.towns?.map(item => item['name'] + ", ")}</p>
+									<div className='row'>
+										<div className='col-md-6'>
+											<h5 class="mt-3 mb-3" style={{ padding: '5px', border: '1px solid lightgray' }}>Name</h5>
+											<p>{game?.name}</p>
+										</div>
+										<div className='col-md-6'>
+											<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Game Type</h5>
+											<p>{game?.gameTypeId?.name}</p>
+										</div>
+										<div className='col-md-6'>
+											<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Available In</h5>
+											<p>{game.towns?.map((item, index) => game.towns.length - 1 === index ? item['name'] : item['name'] + ", ")}</p>
+										</div>
+										<div className='col-md-6'>
+											<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Duration</h5>
+											<p>{game.duration + " " + game.durationType}</p>
+										</div>
+										<div className='col-md-12'>
+											<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Introduction</h5>
+											<p>{game?.introduction}</p>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-12">
 					<div class="card">
 						<div class="card-body">
 							<div class="row align-items-center mb-4">
-								<h4 style={{ paddingLeft: '2rem' }}>Clues</h4>
-								<div class="col-md-12 text-right">
-									<a href={""} style={{ marginBottom: '1rem' }} onClick={() => setSelectedClue(null)} data-toggle="modal" data-target="#addClue" className="btn btn-primary px-3">+ ADD CLUE</a>
+								<div className='container'>
+									<div className='row'>
+										<div className='col-md-6'>
+											<h2>Clues</h2>
+										</div>
+										<div class="col-md-6">
+											<button style={{ marginBottom: "1rem", float: 'right' }} onClick={() => setSelectedClue(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addClue">
+												+ ADD CLUE
+											</button>
+										</div>
+									</div>
 								</div>
 								<div className='container'>
-
+									{clues.length === 0 && (
+										<p>No Clues Added Yet.</p>
+									)}
 									{clues?.map(clue => (
 										<div className='row'>
 											<div className='col-md-12'>

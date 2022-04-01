@@ -104,6 +104,10 @@
   border: 1px solid lightgrey
 }
 
+.error-demo-wrapper {
+  border: 1px solid red;
+}
+
 .demo-editor {
   min-height: 180px;
   padding: 1rem;

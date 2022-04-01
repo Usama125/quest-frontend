@@ -39,7 +39,9 @@ function Town() {
 											<h4>Towns</h4>
 										</div>
 										<div class="col-md-6 text-right">
-											<a href={""} onClick={() => setSelectedTown(null)} data-toggle="modal" data-target="#addTown" className="btn btn-primary px-3">+ ADD TOWN</a>
+											<button onClick={() => setSelectedTown(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addTown">
+												+ ADD TOWN
+											</button>
 										</div>
 									</div>
 									<table class="table table-bordered">
@@ -61,6 +63,11 @@ function Town() {
 													</td>
 												</tr>
 											))}
+											{towns.length === 0 && (
+												<tr>
+													<td colSpan={3}>No Towns Added Yet</td>
+												</tr>
+											)}
 										</tbody>
 									</table>
 								</div>

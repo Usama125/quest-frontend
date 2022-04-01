@@ -3,10 +3,11 @@ import { Formik, Form } from 'formik'
 import TextInput from '../../../../components/forms/TextInput'
 import TextArea from '../../../../components/forms/TextArea'
 import { toast } from 'react-toastify'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import GameTypeApi from '../../../../api/gameType'
 
 function AddGameType({ selectedGameType, setGameTypes, gameTypes }) {
+	const closeBtnRef = useRef();
 	return (
 		<Formik
 			initialValues={{
@@ -21,12 +22,14 @@ function AddGameType({ selectedGameType, setGameTypes, gameTypes }) {
 						setGameTypes(res.data.data);
 						resetForm();
 						toast.success("Game Type has been updated");
+						closeBtnRef.current.click();
 					});
 				} else {
 					GameTypeApi.createGameType(values).then(res => {
 						setGameTypes(res.data.data);
 						resetForm();
 						toast.success("Game Type has been added");
+						closeBtnRef.current.click();
 					})
 				}
 			}}
@@ -36,7 +39,7 @@ function AddGameType({ selectedGameType, setGameTypes, gameTypes }) {
 				<div className="modal-dialog modal-dialog-centered modal-lg">
 					<div className="modal-content">
 						<div className="modal-body">
-							<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+							<button ref={closeBtnRef} type="button" className="close" data-dismiss="modal" aria-label="Close">
 								<span className="icon-close"></span>
 							</button>
 							<h4 className="text-center">{selectedGameType?.name ? "Update" : "Add"} Game Type</h4>

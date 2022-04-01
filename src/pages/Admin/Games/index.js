@@ -48,7 +48,9 @@ function Games() {
 											<h4>Games</h4>
 										</div>
 										<div class="col-md-6 text-right">
-											<a href={""} data-toggle="modal" data-target="#addGame" onClick={() => setSelectedGame(null)} className="btn btn-primary px-3">+ ADD GAME</a>
+											<button onClick={(e) => setSelectedGame(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addGame">
+												+ ADD GAME
+											</button>
 										</div>
 									</div>
 									<table class="table table-bordered">
@@ -67,7 +69,7 @@ function Games() {
 													<td style={{ fontSize: '0.9rem' }}>{index + 0.9}</td>
 													<td style={{ fontSize: '0.9rem' }}>{game.name}</td>
 													<td style={{ fontSize: '0.9rem' }}>{game?.gameTypeId?.name}</td>
-													<td style={{ fontSize: '0.9rem' }}>{game.towns?.map(item => item['name'] + ", ")}</td>
+													<td style={{ fontSize: '0.9rem' }}>{game.towns?.map((item, index) => game.towns.length - 1 === index ? item['name'] : item['name'] + ", ")}</td>
 													<td class="text-center">
 														<Link to={`game/${game._id}`} class="text-info mx-2"><i style={{ fontSize: '1.4rem' }} class="fa fa-eye"></i></Link>
 														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedGame(game) }} data-toggle="modal" data-target="#addGame"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>
@@ -75,6 +77,11 @@ function Games() {
 													</td>
 												</tr>
 											))}
+											{games.length === 0 && (
+												<tr>
+													<td colSpan={3}>No Games Added Yet</td>
+												</tr>
+											)}
 										</tbody>
 									</table>
 								</div>
