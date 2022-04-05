@@ -70,20 +70,17 @@ function AddGame({ selectedGame, setGames, games, gameTypes, clickGameLabel }) {
 			})
 		})
 	}, [selectedGame])
-
 	return (
 		<Formik
 			initialValues={{
 				name: selectedGame?.name || "",
 				gameTypeId: selectedGame?.gameTypeId._id || "",
-				durationType: selectedGame?.durationType || "",
-				duration: selectedGame?.duration || "",
+				published: selectedGame?.published || ""
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required('Required'),
 				gameTypeId: Yup.string().required('Required'),
-				durationType: Yup.string().required('Required'),
-				duration: Yup.number("Must be a number").required('Required'),
+				published: Yup.string().required('Required')
 			})}
 			onSubmit={(values, { resetForm }) => {
 				if (towns.selectedTowns.length === 0) {
@@ -175,7 +172,7 @@ function AddGame({ selectedGame, setGames, games, gameTypes, clickGameLabel }) {
 										<div className="form-group">
 											<SelectInput name="durationType">
 												<option value="">Duration Type</option>
-												<option value={DURATION_TYPE.HOURS}>{DURATION_TYPE.HOURS}</option>
+												<option value={true}>{DURATION_TYPE.HOURS}</option>
 												<option value={DURATION_TYPE.MINUTES}>{DURATION_TYPE.MINUTES}</option>
 											</SelectInput>
 										</div>
@@ -183,6 +180,15 @@ function AddGame({ selectedGame, setGames, games, gameTypes, clickGameLabel }) {
 									<div className="col-md-12">
 										<div className="form-group">
 											<TextInput type="text" name="duration" placeholder="Duration" />
+										</div>
+									</div>
+									<div className="col-md-12">
+										<div className="form-group">
+											<SelectInput name="published">
+												<option value="">Publish</option>
+												<option value={true}>{"YES"}</option>
+												<option value={false}>{"NO"}</option>
+											</SelectInput>
 										</div>
 									</div>
 									<div className="col-md-12">

@@ -3,10 +3,14 @@ import DashboardLayout from '../../../layout/DashboardLayout'
 import AddTown from './components/AddTown';
 import TownsApi from '../../../api/towns';
 import { toast } from 'react-toastify';
+import SORT_ICON from '../../../assets/images/two-arrows.png';
+import UP_ICON from '../../../assets/images/sort-up.png';
+import DOWN_ICON from '../../../assets/images/caret-down.png';
 
 function Town() {
 	const [towns, setTowns] = useState([]);
 	const [selectedTown, setSelectedTown] = useState(null);
+	const [nameSorting, setNameSorting] = useState({ enabled: false, sort_type: "" });
 
 	useEffect(() => {
 		TownsApi.getTowns().then(res => {
@@ -24,6 +28,19 @@ function Town() {
 		}).catch(err => {
 			toast.error("Problem while deleting the town");
 		});
+	}
+
+	const onNameSortHandler = (sort_type) => {
+		setNameSorting({
+			sort_type: sort_type,
+			enabled: true
+		});
+
+		if (sort_type === "DESC") {
+			setTowns(towns.sort((a, b) => (a.name > b.name) ? 1 : -1))
+		} else if (sort_type === "ASC") {
+			setTowns(towns.sort((a, b) => (a.name < b.name) ? 1 : -1))
+		}
 	}
 
 	return (
@@ -48,7 +65,18 @@ function Town() {
 										<thead>
 											<tr>
 												<th style={{ fontSize: '1rem' }}>#</th>
-												<th style={{ fontSize: '1rem' }}>Name</th>
+												<th style={{ fontSize: '1rem' }}>
+													Name
+													{!nameSorting.enabled && nameSorting.sort_type === "" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem' }} src={SORT_ICON} onClick={onNameSortHandler.bind(this, "DESC")} />
+													)}
+													{nameSorting.enabled && nameSorting.sort_type === "DESC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={DOWN_ICON} onClick={onNameSortHandler.bind(this, "ASC")} />
+													)}
+													{nameSorting.enabled && nameSorting.sort_type === "ASC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onNameSortHandler.bind(this, "DESC")} />
+													)}
+												</th>
 												<th style={{ fontSize: '1rem' }} >Actions</th>
 											</tr>
 										</thead>

@@ -17,6 +17,11 @@ function AddTown({ selectedTown, setTowns, towns }) {
 				name: Yup.string().required('Required')
 			})}
 			onSubmit={(values, { resetForm }) => {
+				if (towns.filter(town => town.name.toLowerCase() === values.name.toLowerCase()).length > 0) {
+					toast.error("Town Already Exists");
+					return false;
+				}
+
 				if (selectedTown) {
 					TownsApi.updateTown(selectedTown._id, values).then(res => {
 						const tempTowns = JSON.parse(JSON.stringify(towns));
@@ -29,6 +34,8 @@ function AddTown({ selectedTown, setTowns, towns }) {
 						toast.success("Town has been updated");
 						resetForm();
 						closeBtnRef.current.click();
+					}).catch(err => {
+						toast.error(err.response.data.message);
 					});
 				} else {
 					TownsApi.createTown(values).then(res => {
@@ -38,7 +45,9 @@ function AddTown({ selectedTown, setTowns, towns }) {
 						toast.success("Town has been added");
 						resetForm();
 						closeBtnRef.current.click();
-					})
+					}).catch(err => {
+						toast.error(err.response.data.message)
+					});
 				}
 			}}
 			enableReinitialize={true}

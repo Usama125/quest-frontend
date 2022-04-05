@@ -11,7 +11,7 @@ import draftToHtml from 'draftjs-to-html';
 import { Editor } from "react-draft-wysiwyg";
 import { useParams } from 'react-router-dom';
 
-function AddClue({ selectedClue, setClues }) {
+function AddClue({ gameName, selectedClue, setClues }) {
 	const [file, setFile] = useState(null)
 	const [fileError, setFileError] = useState("")
 	const [submited, setSubmited] = useState(false)
@@ -65,6 +65,7 @@ function AddClue({ selectedClue, setClues }) {
 				hint_2: selectedClue?.hint_2 || "",
 				type: selectedClue?.type || "TEXT",
 				ans: selectedClue?.ans || "",
+				clue_type: selectedClue?.clue_type || "",
 			}}
 			validationSchema={Yup.object({
 				name: Yup.string().required('Required'),
@@ -72,6 +73,7 @@ function AddClue({ selectedClue, setClues }) {
 				hint_2: Yup.string().required('Required'),
 				type: Yup.string().required('Required'),
 				ans: Yup.string().required('Required'),
+				clue_type: Yup.string().required('Required'),
 			})}
 			onSubmit={(values, { resetForm }) => {
 				setSubmited(true);
@@ -119,6 +121,7 @@ function AddClue({ selectedClue, setClues }) {
 				formData.append("hint_1", values.hint_1);
 				formData.append("hint_2", values.hint_2);
 				formData.append("gameId", id);
+				formData.append("clue_type", values.clue_type);
 				formData.append("type", values.type);
 				formData.append("text", clueText);
 				formData.append("ans", values.ans);
@@ -157,9 +160,18 @@ function AddClue({ selectedClue, setClues }) {
 										<button ref={closeBtnRef} type="button" className="close" data-dismiss="modal" aria-label="Close">
 											<span className="icon-close"></span>
 										</button>
-										<h4 className="text-center">{selectedClue?.hint_1 ? "Update" : "Add"} Clue</h4>
+										<h4 className="text-center">{selectedClue?.hint_1 ? "Update" : "Add"} Clue For {gameName}</h4>
 										<Form>
 											<div className="row">
+												<div className="col-md-12">
+													<div className="form-group">
+														<SelectInput name="clue_type">
+															<option value="">Standard/Extended</option>
+															<option value={"STANDARD"}>{"STANDARD"}</option>
+															<option value={"EXTENDED"}>{"EXTENDED"}</option>
+														</SelectInput>
+													</div>
+												</div>
 												<div className="col-md-12">
 													<div className="form-group">
 														<TextInput type="text" name="name" placeholder="Name" />

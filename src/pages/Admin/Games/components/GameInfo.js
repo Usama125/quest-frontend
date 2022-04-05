@@ -1,16 +1,20 @@
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import ClueApi from '../../../../api/clue';
 import GameApi from '../../../../api/game';
 import DashboardLayout from '../../../../layout/DashboardLayout'
 import AddClue from './AddClue';
+import ExtendedClues from './ExtendedClues';
+import StandardClues from './StandardClues';
 
 function GameInfo() {
 	const { id } = useParams();
 	const [game, setGame] = useState({});
 	const [clues, setClues] = useState([]);
 	const [selectedClue, setSelectedClue] = useState(null);
+	const [tabSelected, setTabSelected] = useState("Standard")
 
 	useEffect(() => {
 		GameApi.getSingleGame(id).then(res => {
@@ -63,7 +67,7 @@ function GameInfo() {
 										</div>
 										<div className='col-md-12'>
 											<h5 class="mt-3 mb-2" style={{ padding: '5px', border: '1px solid lightgray' }}>Introduction</h5>
-											<p>{game?.introduction}</p>
+											<div dangerouslySetInnerHTML={{ __html: game?.introduction }}></div>
 										</div>
 									</div>
 								</div>
@@ -74,64 +78,51 @@ function GameInfo() {
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-body">
-							<div class="row align-items-center mb-4">
-								<div className='container'>
-									<div className='row'>
-										<div className='col-md-6'>
-											<h2>Clues</h2>
-										</div>
-										<div class="col-md-6">
-											<button style={{ marginBottom: "1rem", float: 'right' }} onClick={() => setSelectedClue(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addClue">
-												+ ADD CLUE
-											</button>
-										</div>
-									</div>
-								</div>
-								<div className='container'>
-									{clues.length === 0 && (
-										<p>No Clues Added Yet.</p>
-									)}
-									{clues?.map(clue => (
-										<div className='row'>
-											<div className='col-md-12'>
-												<div class="card lab-result mb-2">
-													<div class="card-body">
-														<h5>{clue.name + " "}
-															<span>
-																<a href={null} class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedClue(clue) }} data-toggle="modal" data-target="#addClue"><i class="fa fa-pencil"></i></a>
-																<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteClueHandler(clue) }}><i class="fa fa-trash"></i></a>
-															</span>
-														</h5>
-														<hr />
-														<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Hint 1</p>
-														<p style={{ marginTop: '-10px' }}>{clue?.hint_1}</p>
-														<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Hint 2</p>
-														<p style={{ marginTop: '-10px' }}>{clue?.hint_2}</p>
-														<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Clue Text</p>
-														<p style={{ marginTop: '-10px' }}>{clue?.text}</p>
-														<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Clue Type</p>
-														<p style={{ marginTop: '-10px' }}>{clue?.type}</p>
-														{clue.type !== "TEXT" && (
-															<>
-																<p style={{ fontWeight: 'bold', fontSize: "1.1rem", marginBottom: '5px' }}>Clue File</p>
-																<a href={clue?.url} target="_blank" style={{ marginTop: '-10px' }}>See Attached File</a>
-															</>
-														)}
-														<p style={{ fontWeight: 'bold', fontSize: "1.1rem", marginTop: '10px' }}>Clue Answere</p>
-														<p style={{ marginTop: '-10px' }}>{clue?.ans}</p>
+							<section class="table-section">
+								<div class="container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="card">
+												<div class="card-body">
+													<div class="row align-items-center mb-4">
+														<div class="col-md-6">
+															<h4>Clues</h4>
+														</div>
+														<div class="col-md-6 text-right">
+															<button style={{ marginBottom: "1rem", float: 'right' }} onClick={() => setSelectedClue(null)} type="button" class="btn btn-primary px-3" data-toggle="modal" data-target="#addClue">
+																+ ADD CLUE
+															</button>
+														</div>
 													</div>
+													<div className="row nav-tab-link">
+														<div className="col-md-12">
+															<ul className="nav justify-content-center">
+																<li className="nav-item">
+																	<a className={classNames('nav-link', { 'active': tabSelected === "Standard" })} href={""} onClick={(e) => { e.preventDefault(); setTabSelected("Standard") }}>Standard</a>
+																</li>
+																<li className="nav-item">
+																	<a className={classNames('nav-link', { 'active': tabSelected === "Extended" })} href={""} onClick={(e) => { e.preventDefault(); setTabSelected("Extended") }}>Extended</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+													{tabSelected === "Standard" ? (
+														<StandardClues clues={clues.filter(clue => clue?.clue_type === "STANDARD")} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
+													) : (
+														<ExtendedClues clues={clues.filter(clue => clue?.clue_type === "EXTENDED")} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
+													)}
 												</div>
 											</div>
 										</div>
-									))}
-								</div>
+									</div>
 
-							</div>
+								</div>
+							</section>
 						</div>
 					</div>
 				</div>
 			</div>
-			<AddClue setClues={setClues} selectedClue={selectedClue} />
+			<AddClue gameName={game?.name} setClues={setClues} selectedClue={selectedClue} />
 		</DashboardLayout>
 	)
 }

@@ -4,6 +4,7 @@ import Games from './Games';
 import GameTypes from './GameTypes';
 import Town from './Town'
 import GameInfo from './Games/components/GameInfo';
+import ClueDetails from './Games/components/ClueDetails';
 
 const AdminRouter = withRouter(({ match, ...props }) => {
     return (
@@ -19,6 +20,9 @@ const AdminRouter = withRouter(({ match, ...props }) => {
             </AdminRoute>
             <AdminRoute exact path={`${match.path}/game/:id`} >
                 <GameInfo />
+            </AdminRoute>
+            <AdminRoute exact path={`${match.path}/game/clue/:id`} >
+                <ClueDetails />
             </AdminRoute>
             {/* <AdminRoute exact path={`${match.path}/clues`} >
                 <Clues />

@@ -6,11 +6,18 @@ import GameApi from '../../../api/game';
 import AddGame from './components/AddGame';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import SORT_ICON from '../../../assets/images/two-arrows.png';
+import UP_ICON from '../../../assets/images/sort-up.png';
+import DOWN_ICON from '../../../assets/images/caret-down.png';
 
 function Games() {
 	const [games, setGames] = useState([]);
 	const [selectedGame, setSelectedGame] = useState(null);
 	const [gameTypes, setGameTypes] = useState([]);
+	const [nameSorting, setNameSorting] = useState({ enabled: false, sort_type: "" });
+	const [typeSorting, setTypeSorting] = useState({ enabled: false, sort_type: "" });
+	const [townSorting, setTownSorting] = useState({ enabled: false, sort_type: "" });
+	const [publishSorting, setPublishSorting] = useState({ enabled: false, sort_type: "" });
 
 	useEffect(() => {
 		GameTypeApi.getGameTypes().then(res => {
@@ -32,6 +39,72 @@ function Games() {
 			setGames(tempGames.filter(item => item._id !== game._id));
 		}).catch(err => {
 			toast.error("Problem while deleting the game");
+		});
+	}
+
+	const onNameSortHandler = (sort_type) => {
+		setNameSorting({
+			sort_type: sort_type,
+			enabled: true
+		});
+		setTypeSorting({ enabled: false, sort_type: "" })
+		setTownSorting({ enabled: false, sort_type: "" })
+		if (sort_type === "DESC") {
+			setGames(games.sort((a, b) => (a.name > b.name) ? 1 : -1))
+		} else if (sort_type === "ASC") {
+			setGames(games.sort((a, b) => (a.name < b.name) ? 1 : -1))
+		}
+	}
+
+	const onTypeSortHandler = (sort_type) => {
+		setTypeSorting({
+			sort_type: sort_type,
+			enabled: true
+		});
+		setNameSorting({ enabled: false, sort_type: "" })
+		setTownSorting({ enabled: false, sort_type: "" })
+		setPublishSorting({ enabled: false, sort_type: "" })
+		if (sort_type === "DESC") {
+			setGames(games.sort((a, b) => (a.gameTypeId.name > b.gameTypeId.name) ? 1 : -1))
+		} else if (sort_type === "ASC") {
+			setGames(games.sort((a, b) => (a.gameTypeId.name < b.gameTypeId.name) ? 1 : -1))
+		}
+	}
+
+	const onTownSortHandler = (sort_type) => {
+		setTownSorting({
+			sort_type: sort_type,
+			enabled: true
+		});
+		setNameSorting({ enabled: false, sort_type: "" })
+		setTypeSorting({ enabled: false, sort_type: "" })
+		setPublishSorting({ enabled: false, sort_type: "" })
+		if (sort_type === "DESC") {
+			setGames(games.sort((a, b) => (a.towns[0].name > b.towns[0].name) ? 1 : -1))
+		} else if (sort_type === "ASC") {
+			setGames(games.sort((a, b) => (a.towns[0].name < b.towns[0].name) ? 1 : -1))
+		}
+	}
+
+	const onPublishSortHandler = (sort_type) => {
+		setPublishSorting({
+			sort_type: sort_type,
+			enabled: true
+		});
+		setNameSorting({ enabled: false, sort_type: "" })
+		setTypeSorting({ enabled: false, sort_type: "" })
+		setTownSorting({ enabled: false, sort_type: "" })
+		if (sort_type === "DESC") {
+			setGames(games.sort((a, b) => (a.published > b.published) ? 1 : -1))
+		} else if (sort_type === "ASC") {
+			setGames(games.sort((a, b) => (a.published < b.published) ? 1 : -1))
+		}
+	}
+
+	const publishedChangeHandler = (game) => {
+		GameApi.updateGame(game._id, { ...game, published: !game.published }).then(res => {
+			setGames(res.data.data);
+			toast.success("Game status updated successfully");
 		});
 	}
 
@@ -57,19 +130,70 @@ function Games() {
 										<thead>
 											<tr>
 												<th style={{ fontSize: '1rem' }}>#</th>
-												<th style={{ fontSize: '1rem' }}>Name</th>
-												<th style={{ fontSize: '1rem' }}>Type</th>
-												<th style={{ fontSize: '1rem' }}>Towns</th>
+												<th style={{ fontSize: '1rem' }}>
+													Name
+													{!nameSorting.enabled && nameSorting.sort_type === "" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem' }} src={SORT_ICON} onClick={onNameSortHandler.bind(this, "DESC")} />
+													)}
+													{nameSorting.enabled && nameSorting.sort_type === "DESC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={DOWN_ICON} onClick={onNameSortHandler.bind(this, "ASC")} />
+													)}
+													{nameSorting.enabled && nameSorting.sort_type === "ASC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onNameSortHandler.bind(this, "DESC")} />
+													)}
+												</th>
+												<th style={{ fontSize: '1rem' }}>
+													Type
+													{!typeSorting.enabled && typeSorting.sort_type === "" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem' }} src={SORT_ICON} onClick={onTypeSortHandler.bind(this, "DESC")} />
+													)}
+													{typeSorting.enabled && typeSorting.sort_type === "DESC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={DOWN_ICON} onClick={onTypeSortHandler.bind(this, "ASC")} />
+													)}
+													{typeSorting.enabled && typeSorting.sort_type === "ASC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onTypeSortHandler.bind(this, "DESC")} />
+													)}
+												</th>
+												<th style={{ fontSize: '1rem' }}>
+													Towns
+													{!townSorting.enabled && townSorting.sort_type === "" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem' }} src={SORT_ICON} onClick={onTownSortHandler.bind(this, "DESC")} />
+													)}
+													{townSorting.enabled && townSorting.sort_type === "DESC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={DOWN_ICON} onClick={onTownSortHandler.bind(this, "ASC")} />
+													)}
+													{townSorting.enabled && townSorting.sort_type === "ASC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onTownSortHandler.bind(this, "DESC")} />
+													)}
+												</th>
+												<th style={{ fontSize: '1rem' }}>
+													Published
+													{!publishSorting.enabled && publishSorting.sort_type === "" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem' }} src={SORT_ICON} onClick={onPublishSortHandler.bind(this, "DESC")} />
+													)}
+													{publishSorting.enabled && publishSorting.sort_type === "DESC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={DOWN_ICON} onClick={onPublishSortHandler.bind(this, "ASC")} />
+													)}
+													{publishSorting.enabled && publishSorting.sort_type === "ASC" && (
+														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onPublishSortHandler.bind(this, "DESC")} />
+													)}
+												</th>
 												<th style={{ fontSize: '1rem' }}>Actions</th>
 											</tr>
 										</thead>
 										<tbody>
 											{games?.map((game, index) => (
 												<tr>
-													<td style={{ fontSize: '0.9rem' }}>{index + 0.9}</td>
+													<td style={{ fontSize: '0.9rem' }}>{index + 1}</td>
 													<td style={{ fontSize: '0.9rem' }}>{game.name}</td>
 													<td style={{ fontSize: '0.9rem' }}>{game?.gameTypeId?.name}</td>
 													<td style={{ fontSize: '0.9rem' }}>{game.towns?.map((item, index) => game.towns.length - 1 === index ? item['name'] : item['name'] + ", ")}</td>
+													<td style={{ fontSize: '0.9rem' }}>
+														{game?.published ? "YES" : "NO"}
+														<span>
+															<input onChange={publishedChangeHandler.bind(this, game)} checked={game?.published} type="checkbox" style={{ transform: 'scale(1.7)', marginLeft: "1rem" }} />
+														</span>
+													</td>
 													<td class="text-center">
 														<Link to={`game/${game._id}`} class="text-info mx-2"><i style={{ fontSize: '1.4rem' }} class="fa fa-eye"></i></Link>
 														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedGame(game) }} data-toggle="modal" data-target="#addGame"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>

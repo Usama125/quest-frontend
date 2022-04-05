@@ -14,6 +14,9 @@ const ClueApi = {
 	deleteClue(id) {
 		return trackPromise(axios.delete(`/clues/${id}`))
 	},
+	getSingleClue(id) {
+		return trackPromise(axios.get(`/clues/getSingle/${id}`));
+	}
 }
 
 export default ClueApi;
