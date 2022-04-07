@@ -85,8 +85,7 @@ function AddGame({ selectedGame, setGames, games, gameTypes, clickGameLabel }) {
 			onSubmit={(values, { resetForm }) => {
 				if (towns.selectedTowns.length === 0) {
 					setTownsError(true)
-				} if (towns.selectedTowns.length === 0) {
-					setTownsError(true)
+					return false;
 				} else {
 					setTownsError(false)
 				}
