@@ -16,6 +16,9 @@ const ClueApi = {
 	},
 	getSingleClue(id) {
 		return trackPromise(axios.get(`/clues/getSingle/${id}`));
+	},
+	deleteClueFile(clueId, fileId) {
+		return trackPromise(axios.delete(`/clues/deleteClueFile/${clueId}/${fileId}`))
 	}
 }
 

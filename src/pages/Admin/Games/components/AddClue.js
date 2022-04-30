@@ -11,7 +11,7 @@ import draftToHtml from 'draftjs-to-html';
 import { Editor } from "react-draft-wysiwyg";
 import { useParams } from 'react-router-dom';
 
-function AddClue({ gameName, selectedClue, setClues }) {
+function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 	const [file, setFile] = useState(null)
 	const [fileError, setFileError] = useState("")
 	const [submited, setSubmited] = useState(false)
@@ -52,8 +52,7 @@ function AddClue({ gameName, selectedClue, setClues }) {
 	}, []);
 
 	const onFileUpload = (e) => {
-		console.log(e.target?.files[0]?.type);
-		setFile(e.target?.files[0]);
+		setFile(e.target?.files);
 		setFileError("");
 	}
 
@@ -77,35 +76,11 @@ function AddClue({ gameName, selectedClue, setClues }) {
 			})}
 			onSubmit={(values, { resetForm }) => {
 				setSubmited(true);
+				console.log("Submiteed", file);
 
-				if (values.type !== "TEXT" && file === null) {
+				if (!selectedClue.name && values.type !== "TEXT" && (file === null || file.length === 0)) {
 					setFileError("File is required")
 					return false;
-				}
-
-				if (values.type === "IMAGE") {
-					if (file?.type === "image/png" || file?.type === "image/jpeg") {
-						setFileError("");
-					} else {
-						setFileError("Please select image file")
-						return false;
-					}
-				} else if (values.type === "VIDEO") {
-					if (file?.type === "video/mp4") {
-						setFileError("");
-					} else {
-						setFileError("Please select video file")
-						return false;
-					}
-				} else if (values.type === "AUDIO") {
-					if (file?.type === "audio/mpeg" || file?.type === "audio/mp3") {
-						setFileError("");
-					} else {
-						setFileError("Please select audio file")
-						return false;
-					}
-				} else if (values.type === "TEXT") {
-					setFileError("");
 				}
 
 				if (clueText === "" || clueText === "<p></p>\n") {
@@ -125,7 +100,11 @@ function AddClue({ gameName, selectedClue, setClues }) {
 				formData.append("type", values.type);
 				formData.append("text", clueText);
 				formData.append("ans", values.ans);
-				values.type !== "TEXT" && formData.append("file", file);
+				if (values.type !== "TEXT" && file !== null) {
+					for (const key of Object.keys(file)) {
+						formData.append('file', file[key])
+					}
+				}
 
 				if (selectedClue) {
 					ClueApi.updateClue(selectedClue._id, formData).then(res => {
@@ -198,10 +177,42 @@ function AddClue({ gameName, selectedClue, setClues }) {
 														</SelectInput>
 													</div>
 												</div>
-												{values.type !== "TEXT" && (
+
+												{values.type !== 'TEXT' && values.type === "IMAGE" && (
+													<>
+														<div className="col-md-12">
+															<div class="form-group">
+																<input type="file" class="form-control" accept="image/*" multiple="multiple" onChange={onFileUpload} />
+																{submited && fileError ? (
+																	<span style={{ color: "red", fontSize: "0.9rem", paddingTop: "10px" }}>{fileError}</span>
+																) : null}
+																{selectedClue && Object.keys(selectedClue).length > 0 && selectedClue?.url && (<div style={{ marginTop: "1rem" }}><a href={selectedClue.url} target="_blank">See Attached File</a></div>)}
+															</div>
+														</div>
+														{selectedClue?.name && (
+															<>
+																<div className="col-md-12">
+																	<h6>Attached Files</h6>
+																	{selectedClue?.urls?.map(singleUrl => (
+																		<div>
+																			<a href={singleUrl?.url} target="_blank" style={{ marginTop: '-10px' }}>See Attached File</a>
+																			<span>
+																				<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); ClueApi.deleteClueFile(selectedClue._id, singleUrl._id).then(res => { toast.success("File Deleted Successfully"); setSelectedClue(res.data.data) }).catch(err => { toast.error("Error while deleting the file") }) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>
+																			</span>
+																		</div>
+																	))}
+																</div>
+																<br /><br /><br /><br />
+															</>
+														)}
+													</>
+
+												)}
+
+												{values.type !== 'TEXT' && values.type === "VIDEO" && (
 													<div className="col-md-12">
 														<div class="form-group">
-															<input type="file" class="form-control" onChange={onFileUpload} />
+															<input type="file" class="form-control" accept="video/*" multiple="multiple" onChange={onFileUpload} />
 															{submited && fileError ? (
 																<span style={{ color: "red", fontSize: "0.9rem", paddingTop: "10px" }}>{fileError}</span>
 															) : null}
@@ -209,6 +220,19 @@ function AddClue({ gameName, selectedClue, setClues }) {
 														</div>
 													</div>
 												)}
+
+												{values.type !== 'TEXT' && values.type === "AUDIO" && (
+													<div className="col-md-12">
+														<div class="form-group">
+															<input type="file" class="form-control" accept="audio/*" multiple="multiple" onChange={onFileUpload} />
+															{submited && fileError ? (
+																<span style={{ color: "red", fontSize: "0.9rem", paddingTop: "10px" }}>{fileError}</span>
+															) : null}
+															{selectedClue && Object.keys(selectedClue).length > 0 && selectedClue?.url && (<div style={{ marginTop: "1rem" }}><a href={selectedClue.url} target="_blank">See Attached File</a></div>)}
+														</div>
+													</div>
+												)}
+
 												<div className="col-md-12">
 													<label for="intro" >Clue Text</label>
 													<div className="form-group">

@@ -122,7 +122,7 @@ function GameInfo() {
 					</div>
 				</div>
 			</div>
-			<AddClue gameName={game?.name} setClues={setClues} selectedClue={selectedClue} />
+			<AddClue gameName={game?.name} setClues={setClues} setSelectedClue={setSelectedClue} selectedClue={selectedClue} />
 		</DashboardLayout>
 	)
 }

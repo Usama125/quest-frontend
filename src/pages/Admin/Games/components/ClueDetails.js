@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom';
 import ClueApi from '../../../../api/clue';
 import DashboardLayout from '../../../../layout/DashboardLayout'
+import { toast } from 'react-toastify'
 
 function ClueDetails() {
 	const { id } = useParams();
@@ -38,8 +39,15 @@ function ClueDetails() {
 									<p style={{ marginTop: '-10px' }}>{clue?.type}</p>
 									{clue.type !== "TEXT" && (
 										<>
-											<p style={{ fontWeight: 'bold', fontSize: "1.1rem", marginBottom: '5px' }}>Clue File</p>
-											<a href={clue?.url} target="_blank" style={{ marginTop: '-10px' }}>See Attached File</a>
+											<p style={{ fontWeight: 'bold', fontSize: "1.1rem", marginBottom: '5px' }}>Clue Files</p>
+											{clue.urls?.map(singleUrl => (
+												<div>
+													<a href={singleUrl?.url} target="_blank" style={{ marginTop: '-10px' }}>See Attached File</a>
+													<span>
+														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); ClueApi.deleteClueFile(id, singleUrl._id).then(res => { toast.success("File Deleted Successfully"); setClue(res.data.data) }).catch(err => { toast.error("Error while deleting the file") }) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>
+													</span>
+												</div>
+											))}
 										</>
 									)}
 									<p style={{ fontWeight: 'bold', fontSize: "1.1rem", marginTop: '10px' }}>Clue Answere</p>
