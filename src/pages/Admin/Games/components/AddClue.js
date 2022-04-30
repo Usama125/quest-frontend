@@ -78,7 +78,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				setSubmited(true);
 				console.log("Submiteed", file);
 
-				if (!selectedClue.name && values.type !== "TEXT" && (file === null || file.length === 0)) {
+				if (!selectedClue?.name && values.type !== "TEXT" && (file === null || file.length === 0)) {
 					setFileError("File is required")
 					return false;
 				}
