@@ -33,6 +33,8 @@ function ClueDetails() {
 									<p style={{ marginTop: '-10px' }}>{clue?.hint_1}</p>
 									<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Hint 2</p>
 									<p style={{ marginTop: '-10px' }}>{clue?.hint_2}</p>
+									<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Hint 3</p>
+									<p style={{ marginTop: '-10px' }}>{clue?.hint_3}</p>
 									<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Clue Text</p>
 									<div style={{ marginTop: '-10px' }} dangerouslySetInnerHTML={{ __html: clue?.text }}></div>
 									<p style={{ fontWeight: 'bold', fontSize: "1.1rem" }}>Clue Type</p>

@@ -62,6 +62,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				name: selectedClue?.name || "",
 				hint_1: selectedClue?.hint_1 || "",
 				hint_2: selectedClue?.hint_2 || "",
+				hint_3: selectedClue?.hint_3 || "",
 				type: selectedClue?.type || "TEXT",
 				ans: selectedClue?.ans || "",
 				clue_type: selectedClue?.clue_type || "",
@@ -70,6 +71,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				name: Yup.string().required('Required'),
 				hint_1: Yup.string().required('Required'),
 				hint_2: Yup.string().required('Required'),
+				hint_3: Yup.string().required('Required'),
 				type: Yup.string().required('Required'),
 				ans: Yup.string().required('Required'),
 				clue_type: Yup.string().required('Required'),
@@ -95,6 +97,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				formData.append("name", values.name);
 				formData.append("hint_1", values.hint_1);
 				formData.append("hint_2", values.hint_2);
+				formData.append("hint_3", values.hint_3);
 				formData.append("gameId", id);
 				formData.append("clue_type", values.clue_type);
 				formData.append("type", values.type);
@@ -164,6 +167,11 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 												<div className="col-md-12">
 													<div className="form-group">
 														<TextInput type="text" name="hint_2" placeholder="Hint 2" />
+													</div>
+												</div>
+												<div className="col-md-12">
+													<div className="form-group">
+														<TextInput type="text" name="hint_3" placeholder="Hint 3" />
 													</div>
 												</div>
 												<div className="col-md-12">
