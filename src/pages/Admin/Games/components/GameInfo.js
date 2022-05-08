@@ -12,7 +12,7 @@ import StandardClues from './StandardClues';
 function GameInfo() {
 	const { id } = useParams();
 	const [game, setGame] = useState({});
-	const [clues, setClues] = useState([]);
+	const [clues, setClues] = useState(null);
 	const [selectedClue, setSelectedClue] = useState(null);
 	const [tabSelected, setTabSelected] = useState("Standard")
 
@@ -29,8 +29,15 @@ function GameInfo() {
 
 	const deleteClueHandler = (clue) => {
 		ClueApi.deleteClue(clue._id).then(res => {
-			const tempClues = JSON.parse(JSON.stringify(clues));
-			setClues(tempClues.filter(cl => cl._id !== clue._id));
+			if (clue.clue_type === "STANDARD") {
+				const tempClues = JSON.parse(JSON.stringify(clues));
+				tempClues.standard = tempClues?.standard?.filter(cl => cl._id !== clue._id)
+				setClues(tempClues);
+			} else {
+				const tempClues = JSON.parse(JSON.stringify(clues));
+				tempClues.extended = tempClues?.extended?.filter(cl => cl._id !== clue._id)
+				setClues(tempClues);
+			}
 			toast.success("Clue deleted successfully");
 		})
 	}
@@ -107,9 +114,9 @@ function GameInfo() {
 														</div>
 													</div>
 													{tabSelected === "Standard" ? (
-														<StandardClues clues={clues.filter(clue => clue?.clue_type === "STANDARD")} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
+														<StandardClues clues={clues ? clues.standard : []} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
 													) : (
-														<ExtendedClues clues={clues.filter(clue => clue?.clue_type === "EXTENDED")} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
+														<ExtendedClues clues={clues ? clues?.extended : []} setSelectedClue={setSelectedClue} deleteClueHandler={deleteClueHandler} />
 													)}
 												</div>
 											</div>

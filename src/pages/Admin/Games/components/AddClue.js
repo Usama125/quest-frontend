@@ -63,6 +63,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				hint_1: selectedClue?.hint_1 || "",
 				hint_2: selectedClue?.hint_2 || "",
 				hint_3: selectedClue?.hint_3 || "",
+				order: selectedClue?.order || "",
 				type: selectedClue?.type || "TEXT",
 				ans: selectedClue?.ans || "",
 				clue_type: selectedClue?.clue_type || "",
@@ -72,6 +73,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				hint_1: Yup.string().required('Required'),
 				hint_2: Yup.string().required('Required'),
 				hint_3: Yup.string().required('Required'),
+				order: Yup.number("Order must be a number").required('Required'),
 				type: Yup.string().required('Required'),
 				ans: Yup.string().required('Required'),
 				clue_type: Yup.string().required('Required'),
@@ -97,6 +99,7 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 				formData.append("hint_1", values.hint_1);
 				formData.append("hint_2", values.hint_2);
 				formData.append("hint_3", values.hint_3);
+				formData.append("order", values.order);
 				formData.append("gameId", id);
 				formData.append("clue_type", values.clue_type);
 				formData.append("type", values.type);
@@ -255,6 +258,11 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 												<div className="col-md-12">
 													<div className="form-group">
 														<TextInput type="text" name="ans" placeholder="Clue Answere" />
+													</div>
+												</div>
+												<div className="col-md-12">
+													<div className="form-group">
+														<TextInput type="text" name="order" placeholder="Clue Order ( 1, 2, 3... )" />
 													</div>
 												</div>
 											</div>
