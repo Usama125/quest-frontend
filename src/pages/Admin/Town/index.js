@@ -77,6 +77,9 @@ function Town() {
 														<img style={{ cursor: 'pointer', paddingLeft: '0.4rem', width: '1.2rem' }} src={UP_ICON} onClick={onNameSortHandler.bind(this, "DESC")} />
 													)}
 												</th>
+												<th style={{ fontSize: '1rem' }}>
+													Image
+												</th>
 												<th style={{ fontSize: '1rem' }} >Actions</th>
 											</tr>
 										</thead>
@@ -85,6 +88,9 @@ function Town() {
 												<tr>
 													<td style={{ fontSize: '0.9rem' }}>{index + 1}</td>
 													<td style={{ fontSize: '0.9rem' }}>{town.name}</td>
+													<td style={{ fontSize: '0.9rem' }}>
+														{town?.url ? (<a href={town?.url} target="_blank"><img src={town?.url} style={{ width: '4rem', height: '3.5rem' }} /></a>) : "No Image"}
+													</td>
 													<td class="text-center">
 														<a href="javascript:void(0)" class="text-warning mx-2" onClick={(e) => { e.preventDefault(); setSelectedTown(town) }} data-toggle="modal" data-target="#addTown"><i style={{ fontSize: '1.4rem' }} class="fa fa-pencil"></i></a>
 														<a href="javascript:void(0)" class="text-danger mx-2" onClick={(e) => { e.preventDefault(); deleteTownHandler(town) }}><i style={{ fontSize: '1.4rem' }} class="fa fa-trash"></i></a>

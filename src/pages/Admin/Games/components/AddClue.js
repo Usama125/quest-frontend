@@ -78,7 +78,6 @@ function AddClue({ gameName, selectedClue, setClues, setSelectedClue }) {
 			})}
 			onSubmit={(values, { resetForm }) => {
 				setSubmited(true);
-				console.log("Submiteed", file);
 
 				if (!selectedClue?.name && values.type !== "TEXT" && (file === null || file.length === 0)) {
 					setFileError("File is required")
